@@ -4,20 +4,19 @@ author: "John Foley"
 date: "6/18/2017"
 output: html_document
 ---
-
-1. grouptype
-    Group type: Are the averages for this row based on an activity or a subject?
-    "activity" => Averages are based on an activity.
-    "subject" => Averages are based on a subject.
    
-2. subject
+1. subject
     Represents the subject that the average variables describe.
-    * If grouptype == "activity" then subject is NA.
+    Represented as an integer vector.
+    Each subject is paired with each of the six activity
+    values.
     1..30 => Unique subjects
    
-3. activity
+2. activity
     Represents the activity that the average variables describe.
-    * If grouptype == "subject" then activity is NA.
+    Represented as a factor variable.
+    Each activity is paired with each of the thirty subject
+    values.
     Unique activities:
         "laying"
         "sitting"
@@ -28,7 +27,7 @@ output: html_document
   
 4-82.
     These variables represent the averages of various measurements taken for
-    each subject and each activity. Variables are either measured in time or
+    each subject and activity pair. Variables are either measured in time or
     frequency, depending on the "t" or "f" prefix in the variable names. Certain
     measurement averages are computed separately for measurements taken in the 
     x, y, and z directions. More information on the original measurements can be

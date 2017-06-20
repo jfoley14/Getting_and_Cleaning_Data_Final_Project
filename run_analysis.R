@@ -52,33 +52,27 @@ colnames(dat) <- sapply(colnames(dat), tolower)
 
 library(dplyr)
 
-# Group dat by activity and find average of each variable
-dat_by_activity <- aggregate(dat[, c(2, 4:82)], list(dat$activity), 
-                             mean) # Ignore warning messages
-dat_by_activity <- select(dat_by_activity, -activity)
-colnames(dat_by_activity)[1] <- "activity"
-dat_by_activity <- cbind(grouptype = "activity", subject = NA, dat_by_activity)
-
-# Group dat by subject and find average of each variable
-dat_by_subject <- aggregate(dat[, c(1, 4:82)], list(dat$subject), mean)
-dat_by_subject <- select(dat_by_subject, -subject)
-colnames(dat_by_subject)[1] <- "subject"
-dat_by_subject <- cbind(grouptype = "subject", subject = dat_by_subject[, 1], 
-                        activity = NA, dat_by_subject[, 2:80])
-
-# Combine dat_by_activity and dat_by_subject
-dat_avgs <- rbind(dat_by_activity, dat_by_subject)
+# Group dat by subject and activity and find the averages of the feature 
+# variables for each group
+grouped_dat <- aggregate(dat[, c(1, 4:82)], list(dat$subject, dat$activity), 
+                         mean)
+grouped_dat <- select(grouped_dat, -subject)
+colnames(grouped_dat)[1] <- "subject"
+colnames(grouped_dat)[2] <- "activity"
+grouped_dat <- arrange(grouped_dat, subject, activity)
 
 # Update variable names to signify averages
-colnames(dat_avgs)[4:82] <- sapply(colnames(dat_avgs)[4:82], 
+colnames(grouped_dat)[3:81] <- sapply(colnames(grouped_dat)[3:81], 
                                    function(x) paste("avg_", x, sep = ""))
+
+View(grouped_dat)
 
 ###############################################################################
 
 ###############################################################################
 
 # Create a txt file containing the final data frame
-write.table(dat_avgs, file = "final_data.txt", row.names = FALSE)
+write.table(grouped_dat, file = "final_data.txt", row.names = FALSE)
 
 # Read the txt file back into R to better read the data frame
 data <- read.table("final_data.txt", header = TRUE)
